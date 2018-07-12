@@ -57,54 +57,52 @@ class AddEvent : AppCompatActivity() {
 
         add.setOnClickListener(View.OnClickListener {
 
-            var calendartitle:String = calendar_title.text.toString()
-            var desc:String = description.text.toString()
-            var location:String = location.text.toString()
-            var startdate:String = startdate.text.toString()
-            var enddate:String = enddate.text.toString()
-            var startdate_ms:Long?=null
-            var enddate_ms:Long?=null
+            var calendartitle: String = calendar_title.text.toString()
+            var desc: String = description.text.toString()
+            var location: String = location.text.toString()
+            var startdate: String = startdate.text.toString()
+            var enddate: String = enddate.text.toString()
+            var startdate_ms: Long? = null
+            var enddate_ms: Long? = null
             var eventID: Long = -1
 
             val df = DateFormat.getDateFormat(this)
             val f = SimpleDateFormat("dd-MM-yyyy")
             try {
                 val d = f.parse(startdate)
-                val dd= f.parse(enddate)
-               startdate_ms  = d.time
+                val dd = f.parse(enddate)
+                startdate_ms = d.time
                 enddate_ms = dd.time
 
             } catch (e: ParseException) {
                 e.printStackTrace()
             }
 
-            try{
+            try {
 
-                var eventUriString:String = "content://com.android.calendar/events"
+                var eventUriString: String = "content://com.android.calendar/events"
 
-                var eventvalues:ContentValues= ContentValues()
-                eventvalues.put("calendar_id",1)
-                eventvalues.put("title",calendartitle)
-                eventvalues.put("description",desc)
-                eventvalues.put("eventLocation",location)
-                eventvalues.put("dtstart",startdate_ms)
-                eventvalues.put("dtend",enddate_ms?.plus(600000))
-                eventvalues.put("eventStatus",0)
-                eventvalues.put("eventTimezone","UTC/GMT +5:30")
-                eventvalues.put("hasAlarm",0)
+                var eventvalues: ContentValues = ContentValues()
+                eventvalues.put("calendar_id", 1)
+                eventvalues.put("title", calendartitle)
+                eventvalues.put("description", desc)
+                eventvalues.put("eventLocation", location)
+                eventvalues.put("dtstart", startdate_ms)
+                eventvalues.put("dtend", enddate_ms?.plus(600000))
+                eventvalues.put("eventStatus", 0)
+                eventvalues.put("eventTimezone", "UTC/GMT +5:30")
+                eventvalues.put("hasAlarm", 0)
 
                 val eventUri = this.applicationContext
                         .contentResolver
                         .insert(Uri.parse(eventUriString), eventvalues)
 
-                Toast.makeText(this,"Event Saved",Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Event Saved", Toast.LENGTH_LONG).show()
                 eventID = java.lang.Long.parseLong(eventUri.lastPathSegment)
 
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-
 
 
         })

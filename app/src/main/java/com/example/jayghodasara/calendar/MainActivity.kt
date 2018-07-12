@@ -30,49 +30,49 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var list:ArrayList<CalendarPojo> = ArrayList()
+        var list: ArrayList<CalendarPojo> = ArrayList()
         var permissioncheck: Int = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_CALENDAR)
         var permissioncheck2: Int = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALENDAR)
         if (permissioncheck2 != PackageManager.PERMISSION_GRANTED && permissioncheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_CALENDAR,android.Manifest.permission.WRITE_CALENDAR), 1)
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_CALENDAR, android.Manifest.permission.WRITE_CALENDAR), 1)
         } else {
             Toast.makeText(applicationContext, " Permission granted", Toast.LENGTH_LONG).show()
         }
 
-        var COLS= arrayOf(CalendarContract.Events.TITLE,CalendarContract.Events.DTSTART)
+        var COLS = arrayOf(CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART)
 
-        var cursor:Cursor= contentResolver.query(CalendarContract.Events.CONTENT_URI,COLS,null,null,null)
+        var cursor: Cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI, COLS, null, null, null)
 
         get_Events.setOnClickListener(View.OnClickListener {
             var laymam: RecyclerView.LayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-if(!cursor.isClosed) {
+            if (!cursor.isClosed) {
 
 
-    val df = DateFormat.getDateFormat(this)
-    val tf = DateFormat.getTimeFormat(this)
+                val df = DateFormat.getDateFormat(this)
+                val tf = DateFormat.getTimeFormat(this)
 
-    while (cursor.moveToNext()) {
+                while (cursor.moveToNext()) {
 
 
-        var title = cursor.getString(0)
-        var start: Long = cursor.getLong(1)
-        Log.i("fetched", start.toString())
-        var calendar: CalendarPojo = CalendarPojo(title, df.format(start) + " at " + tf.format(start))
-        list.add(calendar)
-    }
+                    var title = cursor.getString(0)
+                    var start: Long = cursor.getLong(1)
+                    Log.i("fetched", start.toString())
+                    var calendar: CalendarPojo = CalendarPojo(title, df.format(start) + " at " + tf.format(start))
+                    list.add(calendar)
+                }
 
-    cursor.close()
+                cursor.close()
 
-    recycle.layoutManager = laymam
-    recycle.adapter = adapter(this, list)
-}else{
-    Toast.makeText(applicationContext, "Already Loaded", Toast.LENGTH_LONG).show()
-}
+                recycle.layoutManager = laymam
+                recycle.adapter = adapter(this, list)
+            } else {
+                Toast.makeText(applicationContext, "Already Loaded", Toast.LENGTH_LONG).show()
+            }
         })
 
         add_event.setOnClickListener(View.OnClickListener {
 
-            var intent:Intent=Intent(this,AddEvent::class.java)
+            var intent: Intent = Intent(this, AddEvent::class.java)
             startActivity(intent)
         })
 
@@ -86,7 +86,7 @@ if(!cursor.isClosed) {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
 
-                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED ) {
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
                         Toast.makeText(applicationContext, "All Permissions Granted", Toast.LENGTH_LONG).show()
                     }
                 } else {
